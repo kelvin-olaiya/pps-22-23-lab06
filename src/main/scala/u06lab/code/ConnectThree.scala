@@ -44,8 +44,17 @@ object ConnectThree extends App:
     case _ =>
       for
         game <- computeAnyGame(player.other, moves - 1)
-        board <- placeAnyDisk(game.head, player)
-      yield board +: game
+        previousBoard = game.head
+        board <- placeAnyDisk(previousBoard, player)
+      yield if previousBoard.isWinning then game else board +: game
+
+  extension (board: Board)
+    def isWinning: Boolean =
+      board.exists(disk =>
+        List((0, 1), (1, 0), (1, 1), (-1, 1)).map(offset => List(offset, (-offset._1, -offset._2)))
+          .map(direction => direction.map(position => find(board, position._1 + disk.x, position._2 + disk.y)))
+          .exists(direction => direction.forall(player => player.isDefined && player.get == disk.player))
+      )
 
   def printBoards(game: Seq[Board]): Unit =
     for
@@ -84,7 +93,7 @@ object ConnectThree extends App:
   // ...O ..XO .X.O X..O
   println("EX 3: ")
 // Exercise 3 (ADVANCED!): implement computeAnyGame such that..
-  computeAnyGame(O, 4).foreach { g =>
+  computeAnyGame(O, 6).foreach { g =>
     printBoards(g)
     println()
   }

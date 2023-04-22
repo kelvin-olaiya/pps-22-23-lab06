@@ -30,7 +30,7 @@ object ConnectThree extends App:
   def find(board: Board, x: Int, y: Int): Option[Player] = board.find(disk => disk.x == x && disk.y == y).map(_.player)
 
   def firstAvailableRow(board: Board, x: Int): Option[Int] =
-    board.filter(_.x == x).map(_.y).maxOption(using (a, b) => a - b).map(_ + 1).orElse(Some(0)).filter(_ <= bound)
+    board.filter(_.x == x).map(_.y).maxOption.map(_ + 1).orElse(Some(0)).filter(_ <= bound)
 
   def placeAnyDisk(board: Board, player: Player): Seq[Board] =
     for
@@ -42,11 +42,11 @@ object ConnectThree extends App:
   def computeAnyGame(player: Player, moves: Int): LazyList[Game] = moves match
     case 0 => LazyList[Game](List(List()))
     case _ =>
-      for
+      (for
         game <- computeAnyGame(player.other, moves - 1)
         previousBoard = game.head
         board <- placeAnyDisk(previousBoard, player)
-      yield if previousBoard.isWinning then game else board +: game
+      yield if previousBoard.isWinning then game else board +: game).distinct
 
   extension (board: Board)
     def isWinning: Boolean =

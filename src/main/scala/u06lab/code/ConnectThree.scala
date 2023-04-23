@@ -8,7 +8,7 @@ object ConnectThree extends TwoPlayerBoardGame with App:
   import GameCore.Player.*
   override val BOARD_SIZE = 4
   
-  def firstAvailableRow(board: Board, x: Int): Option[Int] =
+  private def firstAvailableRow(board: Board, x: Int): Option[Int] =
     board.collect { case Placement(`x`, y, _) => y }.maxOption.map(_ + 1).orElse(Some(0)).filter(_ <= BOARD_SIZE)
     
   override def anyPlacement(board: Board, player: Player): Seq[Board] =

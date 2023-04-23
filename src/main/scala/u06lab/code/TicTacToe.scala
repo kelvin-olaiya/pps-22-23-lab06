@@ -14,7 +14,8 @@ object TicTacToe extends App:
   type Board = Seq[Placement]
   type Game = Seq[Board]
 
-  def find(board: Board, x: Int, y: Int): Option[Player] = board.find(disk => disk.x == x && disk.y == y).map(_.player)
+  def find(board: Board, x: Int, y: Int): Option[Player] = 
+    board.find(placement => placement.x == x && placement.y == y).map(_.player)
 
   def availableRows(board: Board, x: Int): Seq[Int] =
     (0 until BOARD_SIZE).diff(board collect { case Placement(`x`, y, _) => y })

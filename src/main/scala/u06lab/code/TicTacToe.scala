@@ -1,6 +1,7 @@
 package u06lab.code
 
 object TicTacToe extends App:
+  val BOARD_SIZE = 3
   enum Player:
     case X, O
     def other: Player = this match
@@ -15,11 +16,12 @@ object TicTacToe extends App:
 
   def find(board: Board, x: Int, y: Int): Option[Player] = board.find(disk => disk.x == x && disk.y == y).map(_.player)
 
-  def availableRows(board: Board, x: Int): Seq[Int] = (0 until 3).diff(board.collect { case Placement(`x`, y, _) => y })
+  def availableRows(board: Board, x: Int): Seq[Int] =
+    (0 until BOARD_SIZE).diff(board collect { case Placement(`x`, y, _) => y })
 
   def anyPlacement(board: Board, player: Player): Seq[Board] =
     for
-      x <- 0 until 3
+      x <- 0 until BOARD_SIZE
       y <- availableRows(board, x)
     yield Placement(x, y, player) +: board
 
@@ -32,7 +34,6 @@ object TicTacToe extends App:
         board <- anyPlacement(previousBoard, player)
       yield if previousBoard.isWinning then game else board +: game).distinct
 
-
   extension (board: Board)
     def isWinning: Boolean =
       board.exists(disk =>
@@ -43,12 +44,12 @@ object TicTacToe extends App:
 
   def printBoards(game: Seq[Board]): Unit =
     for
-      y <- 2 to 0 by -1
+      y <- (BOARD_SIZE - 1) to 0 by -1
       board <- game.reverse
-      x <- 0 to 2
+      x <- 0 until BOARD_SIZE
     do
       print(find(board, x, y).map(_.toString).getOrElse("."))
-      if x == 2 then
+      if x == (BOARD_SIZE - 1) then
         print(" ")
         if board == game.head then println()
 

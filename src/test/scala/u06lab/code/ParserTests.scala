@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class ParserTests:
+  import Parsers.charParser
   def parser = new BasicParser(Set('a', 'b', 'c'))
   // Note NonEmpty being "stacked" on to a concrete class
   // Bottom-up decorations: NonEmptyParser -> NonEmpty -> BasicParser -> Parser

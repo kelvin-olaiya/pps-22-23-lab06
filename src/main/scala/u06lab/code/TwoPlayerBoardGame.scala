@@ -19,7 +19,7 @@ trait TwoPlayerBoardGame:
   val BOARD_SIZE: Int
 
   def find(board: Board, x: Int, y: Int): Option[Player] =
-    board.find(placement => placement.x == x && placement.y == y).map(_.player)
+    board.collectFirst { case Placement(`x`, `y`, player) => player }
 
   def anyPlacement(board: Board, player: Player): Seq[Board]
 

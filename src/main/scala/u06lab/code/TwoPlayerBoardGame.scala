@@ -27,11 +27,10 @@ trait TwoPlayerBoardGame:
     case 0 => LazyList[Game](List(List()))
     case _ =>
       for
-        game <- computeAnyGame(player.other, moves - 1)
+        game <- computeAnyGame(player.other, moves - 1).distinct
         previousBoard = game.head
-        if !previousBoard.isWinning
         board <- anyPlacement(previousBoard, player)
-      yield board +: game
+      yield if previousBoard.isWinning then game else board +: game
 
   def winningStrategy(board: Board): Boolean =
     board.exists(disk =>
